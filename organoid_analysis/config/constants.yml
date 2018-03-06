@@ -1,0 +1,41 @@
+# ==============================================================================
+# This config file defines constants such as file types and plate maps
+# ==============================================================================
+
+
+im_filetypes: ['gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff']
+csv_filetypes: ['csv']
+
+os:
+  mac: 'darwin'
+  linux: 'linux'
+
+plate_info:
+  96_well:
+    num_rows: 8
+    num_cols: 12
+    rows:
+      - A
+      - B
+      - C
+      - D
+      - E
+      - F
+      - G
+      - H
+    cols:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      - 11
+      - 12
+
+# mark for dropped wells
+drop_mark: x

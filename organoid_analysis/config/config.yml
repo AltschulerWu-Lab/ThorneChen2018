@@ -1,0 +1,298 @@
+# ==============================================================================
+# This config file defines the following for a project 
+# - paths
+# - filenames
+# - column headers
+# - experiment names
+# ==============================================================================
+
+# ==============================================================================
+# Paths
+# -----
+# To reference the project in a different location, change "/awlab/projects" to
+# the new location containing "2015_08_gut_organoid_analysis" in all paths for . 
+# This should be an absolute path.
+# - root: organoid_analysis root dir
+# - config: config dir (contains all yaml files)
+# - raw_data: raw image data (each experiment is stored as a sub directory) 
+# - processed_data: dir to place processed images and features
+# - analysis_output: dir for analysis results
+# ==============================================================================
+
+paths:
+  root: &root_path /awlab/projects/2015_08_gut_organoid_analysis/organoid_analysis
+  config: &config_path /awlab/projects/2015_08_gut_organoid_analysis/organoid_analysis/organoid_analysis/config
+  raw_data: '/awlab/projects/2015_08_gut_organoid_analysis/plates/{exp:s}'
+  processed_data: &processed_prefix '/awlab/projects/2015_08_gut_organoid_analysis/data/processed_data/{exp:s}/{run_type:s}'
+  analysis_output: /awlab/projects/2015_08_gut_organoid_analysis/analysis_output
+
+# ==============================================================================
+# Name format
+# -----------
+# - base: string format for image basename (python)
+# - regex: regex to match base 
+# - suffices: append to basename for full file name
+#     - raw: raw image
+#     - nuc_objs: nuclear objects (CP output, assigns label to each cell)
+#     - cyto_objs: cytoplasmic objects (CP output, assigns label to each cell)
+#     - seg_mask: dense area mask (preseg, assigns 1 to dense region)
+#     - crypt_objs: crypt region nuclear objects (unique label for each cell)
+#     - crypt_labels: crypt region objects (unique label for each crypt )
+#     - crypt_measure: extracted properties for each crypt in a well
+#     - frame_measure: extracted properties for each crypt 
+#     - paneth_objs: paneth objects (CP output, assigns label to each cell)
+#     - well_measure: matrix of measure averages for each crypt (analysis output)
+#     - drop_well_measure: well measure with bad frames dropped
+# ==============================================================================
+
+name_format: 
+  base: '{row:s} - {col:02d}(fld {fld:02d} wv {ch:s})'
+  regex: '(?P<row>[A-H]) - (?P<col>\d{2})\(fld (?P<fld>\d{2}) wv .*\)'
+  suffixes: # fix spelling
+    raw: .tif
+    nuc_objs: _nuc_objects.png
+    cyto_objs: _cyto_objects.png
+    seg_masks: _seg_mask.png
+    crypt_objs: _crypt_objects.png
+    crypt_labels: _crypt_labels.png
+    crypt_measure: _crypt_measure.csv
+    crypt_dispersion: _crypt_dispersion.csv
+    frame_measure: _frame_measure.csv
+    paneth_objs: _paneth_objects.png
+    well_measure: _well_measure.csv
+    drop_well_measure: _drop_well_measure.csv
+
+# ==============================================================================
+# CellProfiler 
+# ------------
+# - job_dirs: top level directories for CellProfiler output 
+#     processed_data/[exp]/[analysis_type]
+#     |-- combined: output from parallel jobs are merged
+#     |-- input: cellprofiler pipeline, qsub script, image filelist
+#     |-- job_output: output and error logs
+#     |-- output: cellprofiler output grouped by image batch (jobs)
+# - cpproj_templates: list cellprofiler pipeline being used
+# - output_dirs: directories in "combined" directory, merge cp output and store
+#     analysis output
+# - qsub_templates: template for submitting cellprofiler jobs
+# - qsub_command_path: text file to run for submitting list of jobs
+# ==============================================================================
+
+cellprofiler:
+  job_dirs:
+    input: &input_dir input
+    job_output: &job_output_dir job_output
+    output: &output_dir output
+    combined: &combined_dir combined
+  cpproj_templates:
+    prefix: *config_path
+    subdir: cpproj_templates
+    dense_gut1: template_dense_gut1.cpproj
+    sparse_gut1: template_sparse_gut1.cpproj
+    merged_gut1: template_merged_gut1.cpproj
+    dense_gut2: template_dense_gut2.cpproj
+    sparse_gut2: template_sparse_gut2.cpproj
+    merged_gut2: template_merged_gut2.cpproj
+    paneth_gut2: template_paneth_gut2.cpproj
+    dense_gut3: template_dense_gut3.cpproj
+    merged_gut3: template_merged_gut3.cpproj
+    dense_gut4: template_dense_gut4.cpproj
+    merged_gut4: template_merged_gut4.cpproj
+    dense_gut5: template_dense_gut5.cpproj
+    merged_gut5: template_merged_gut5.cpproj
+    dense_gut6: template_dense_gut6.cpproj
+    merged_gut6: template_merged_gut6.cpproj
+    dense_gut7: template_dense_gut7.cpproj
+    merged_gut7: template_merged_gut7.cpproj
+    dense_gut8: template_dense_gut8.cpproj
+    merged_gut8: template_merged_gut8.cpproj
+  output_dirs:
+    prefix: *processed_prefix
+    subdir: *combined_dir
+    nuc_objs: nuc_objects
+    cyto_objs: cyto_objects
+    seg_masks: seg_masks
+    crypt_objs: crypt_objs
+    crypt_labels: crypt_labels
+    crypt_measure: crypt_measure
+    frame_measure: frame_measure
+    paneth_objs: paneth_objects
+    well_measure: well_measure
+    drop_well_measure: well_measure
+    csv: csv
+  qsub_templates:
+    prefix: *config_path
+    subdir: qsub_templates
+    preseg: cellprofiler_qsub_template.sh
+    merged: cellprofiler_qsub_template.sh
+    paneth: cellprofiler_qsub_template.sh
+    crypt_masks: crypt_masks_qsub_template.sh
+  qsub_commands_path: '{root:s}/scripts/{time_now:%Y%m%d-%H%M%S}_qsub_commands.txt'
+
+# ==============================================================================
+# Crypt Finder 
+# ------------
+# parameters for crypt detection
+# - seg_mask: pre-segmentation step for identifying dense areas
+#     - dilate_kn_size: size of dilation kernel
+#     - min_area: minimum area of a crypt
+# - crypt_mask: crypt identification from merged segmentation
+#     - dilate_kn_size: size of dilation kernel
+#     - min_area: minimum area of a crypt
+#     - min_edu_num: minimum number of EdU cells in a crypt
+#     - edu_thresh: threshold for EdU+ cell (avg nuclear intensity)
+# - crypt_measure: parameters for analyzing crypt properties
+#     - edu_thresh: threshold for EdU+ cell (avg nuclear intensity)
+#     - paneth_thresh: threshold for paneth+ cell (avg nuclear intensity) [NOT USED]
+# ==============================================================================
+
+crypt_finder:
+  seg_masks:
+    dilate_kn_size: 5
+    min_area: 6000
+  crypt_masks:
+    dilate_kn_size: 5
+    min_area: 10000
+    edu_thresh: 0.005
+    min_edu_num: 5
+  crypt_measure:
+    edu_thresh: 0.005
+    paneth_thresh: 0.0035
+
+# ==============================================================================
+# Exps
+# ----
+# List experiments by name. Experiment folders should all contain same name
+# - sublists indicate experiment groups
+# ==============================================================================
+
+exps:
+  all: &all_exps [ct20a, ct20b, ct21, ct24_control1, ct24_control2, ct24_iwp1, ct24_iwp2, ct25_0, ct25_24, ct25_48, ct25_72, ct31a, ct31b, ct32a, ct32b]
+  gut3: &gut3_exps [ct31a, ct31b, ct32a, ct32b]
+  gut4: &gut4_exps [ct_wntbmp_p1, ct_wntbmp_p2, ct_wntbmp_p3]
+  gut5: &exp5_exps [ct_14d_t00, ct_14d_t03, ct_14d_t07, ct_14d_t11, ct_14d_t14]
+  gut6: &exp6_exps [ct_pc_control_t1, ct_pc_wnt_t1]
+  gut7: &exp7_exps [ct_pc_t3]
+  gut5-7: &exp5-7_exps [ct_14d_t00, ct_14d_t03, ct_14d_t07, ct_14d_t11, ct_14d_t14, ct_pc_control_t1, ct_pc_wnt_t1, ct_pc_t3]
+  gut6-7: &exp6-7_exps [ct_pc_control_t1, ct_pc_wnt_t1, ct_pc_t3]
+  gut8: &gut8_exps [ct_rspo_drc1, ct_rspo_drc2]
+  curr_run: &curr_run [ct_pc_wnt_t1, ct_pc_t3]
+
+# ==============================================================================
+# Exps
+# ----
+# List experiments by name. Experiment folders should all contain same name
+# - sublists indicate experiment groups
+# ==============================================================================
+
+fileops:
+  csv:
+    prefix: *processed_prefix
+    subdir: combined/csv
+    unmerged_csv: unmerged_csv
+    extracted_csv: extracted_csv
+  csv_labels:
+    drop_mark: Drop
+    im_num: ImageNumber
+    im_name: ImageName
+    fname: FileName_DNA
+    mean_cellstain: Intensity_MeanIntensity_CellStain
+    mean_edu: Intensity_MeanIntensity_EdU #Intensity_MeanIntensity_CellStain #Intensity_MeanIntensity_EdU #!!! for gut8 analysis!!!
+    mean_paneth: Intensity_MeanIntensity_Paneth
+    obj_num: ObjectNumber
+    paneth_count: Count_Paneth
+    paneth_fname: FileName_Paneth
+  extracted_csv_im:
+    in_fname: Image.csv
+    out_fname: im_lookup.csv
+    drop_fname: Image_dropframes.csv
+  extracted_csv_nuc:
+    fname: FilteredNuclei.csv
+    out_suffix: _nuc_info.csv
+    labels: 
+      - ObjectNumber
+      - ImageNumber
+      - Intensity_IntegratedIntensity_EdU
+      - Intensity_MeanIntensity_EdU
+      - Intensity_IntegratedIntensity_CellStain #Intensity_IntegratedIntensity_Paneth
+      - Intensity_MeanIntensity_CellStain #Intensity_MeanIntensity_Paneth
+
+  im:
+    dir_key: unmerged_
+  keywords:
+    crypt_csv: Crypt
+    villus_csv: Villus
+    crypt_im: crypt_
+    villus_im: villus_ 
+  id_shift: 30000
+  obj_num_label: 'ObjectNumber'
+
+# ==============================================================================
+# Progs
+# -----
+# Path to programs used
+# - python: anaconda
+# - cellprofiler
+# ==============================================================================
+
+progs:
+  linux:
+    python: '{root:s}/progs/anaconda3_linux/bin/python'
+    cellprofiler: 
+      prefix: '{root:s}/progs/cellprofiler'
+      script: src/CellProfiler/CellProfiler.py
+      program: bin/python
+
+  mac:
+    python: '{root:s}/progs/anaconda3_mac/bin/python'
+    cellprofiler: 
+      prefix: '{root:s}/progs/cellprofiler'
+      script: src/CellProfiler/CellProfiler.py
+      program: bin/python
+
+# ==============================================================================
+# SGE info
+# --------
+# information for generating scripts to submit SGE jobs
+# ==============================================================================
+
+sge_info:
+  input_files:
+    prefix: *processed_prefix
+    subdir: *input_dir
+    qsub: '{exp:s}_{run_type:s}_qsub.sh'
+    cpproj: '{exp:s}_{run_type:s}_cp.cpproj'
+    raw_filelist: '{exp:s}_{run_type:s}_rawlist.txt'
+  run_types:
+    preseg: preseg
+    merged: merged
+    crypt_masks: crypt_masks
+    paneth: paneth
+  cp_sge_job: &cp_sge_job
+    mem_free: 12G
+    runtime: '12:00:00'
+    start_job_num: 1
+    num_jobs: 16
+    exp_list: [ct21]
+    done_file: 'done.txt'
+  preseg:
+    <<: *cp_sge_job
+    runtime: '12:00:00'
+  merged:
+    <<: *cp_sge_job
+    runtime: '12:00:00'
+  paneth:
+    <<: *cp_sge_job
+    runtime: '12:00:00'
+  crypt_sge_job: &crypt_sge_job
+    mem_free: 4G
+    runtime: '12:00:00'
+    done_file: 'crypt_mask_done.txt'
+    exp_list: [ct21]
+  crypt_masks: 
+    <<: *crypt_sge_job
+
+
+
+
+

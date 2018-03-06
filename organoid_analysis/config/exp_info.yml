@@ -1,0 +1,309 @@
+# ==============================================================================
+# This config file defines experimental information for each plate including 
+# number of fields, number of images, channels, etc. 
+# - information is typically defined for a group of plates and inherited by the 
+#   relevant plates
+# ==============================================================================
+
+
+gut1_data: &gut1_info
+  name: gut1_data
+  format: 96_well
+  num_fields: 16
+  field_start: 1
+  num_images: 1536
+  channels:
+    dna: 'UV - DAPI'
+    edu: 'Blue - FITC'
+    paneth: 'Green - dsRed'
+    goblet: 'Red - Cy5'
+  cpproj_template_names: 
+    preseg: dense_gut1
+    merged: merged_gut1
+  thresh:
+    edu: 0.005
+    paneth: 0.0035
+
+ct20a: 
+  <<: *gut1_info
+  name: ct20a
+
+ct20b:
+  <<: *gut1_info
+  name: ct20b
+
+ct21:
+  <<: *gut1_info
+  name: ct21
+
+gut2_data: &gut2_info
+  name: gut2_data
+  format: 96_well
+  num_fields: 16
+  field_start: 1
+  num_images: 1536
+  channels:
+    dna: 'UV - DAPI'
+    edu: 'Green - dsRed'
+    paneth: 'Blue - FITC'
+    goblet: 'TL-DIC - dsRed'
+  cpproj_template_names: 
+    preseg: dense_gut2
+    merged: merged_gut2
+    paneth: paneth_gut2
+  thresh:
+    edu: 0.005
+    paneth: 0.0035
+
+ct24_control1:
+  <<: *gut2_info
+  name: ct24_control1
+
+ct24_control2:
+  <<: *gut2_info
+  name: ct24_control2
+
+ct24_iwp1:
+  <<: *gut2_info
+  name: ct24_iwp1
+
+ct24_iwp2:
+  <<: *gut2_info
+  name: ct24_iwp2
+
+ct25_0:
+  <<: *gut2_info
+  name: ct25_0
+
+ct25_24:
+  <<: *gut2_info
+  name: ct25_24
+
+ct25_48:
+  <<: *gut2_info
+  name: ct25_48
+
+ct25_72:
+  <<: *gut2_info
+  name: ct25_72
+
+gut3_data: &gut3_info
+  name: gut3_data
+  format: 96_well
+  num_fields: 16
+  field_start: 1
+  num_images: 1536
+  channels:
+    dna: 'UV - DAPI'
+    edu: 'Green - dsRed'
+    paneth: 'Blue - FITC'
+  cpproj_template_names: 
+    preseg: dense_gut3
+    merged: merged_gut3
+  thresh:
+    edu: 0.005
+    paneth: 0.007
+
+ct31a:
+  <<: *gut3_info
+  name: ct31a
+
+ct31b:
+  <<: *gut3_info
+  name: ct31b
+
+ct32a:
+  <<: *gut3_info
+  name: ct32a
+
+ct32b:
+  <<: *gut3_info
+  name: ct32b
+
+gut4_data: &gut4_info
+  name: gut4_data
+  format: 96_well
+  num_fields: 16
+  field_start: 1
+  num_images: 1536
+  channels:
+    dna: 'UV - DAPI'
+    edu: 'Green - dsRed'
+    paneth: ''
+    olfm4: 'Blue - FITC'
+  cpproj_template_names: 
+    preseg: dense_gut4
+    merged: merged_gut4
+  thresh:
+    edu: 0.003
+    paneth: 0.007
+
+ct_wntbmp_p1:
+  <<: *gut4_info
+  name: ct_wntbmp_p1
+
+ct_wntbmp_p2:
+  <<: *gut4_info
+  name: ct_wntbmp_p2
+
+ct_wntbmp_p3:
+  <<: *gut4_info
+  name: ct_wntbmp_p3
+
+gut5_data: &gut5_info
+  name: gut5_data
+  format: 96_well
+  num_fields: 16
+  field_start: 1
+  num_images: 576
+  channels:
+    dna: 'UV - DAPI'
+    edu: 'Green - dsRed'
+    paneth: ''
+    cellstain: 'Blue - FITC'
+  cpproj_template_names: 
+    preseg: dense_gut5
+    merged: merged_gut5
+  thresh:
+    edu: 0.003
+    paneth: 0.007
+    olfm4: 0.003
+    lyz: 0.3
+    muc2: 0.2
+  wells: [['B', 2], ['B', 3], ['B', 4], ['B', 5], ['B', 6], ['B', 7], 
+    ['C', 2], ['C', 3], ['C', 4], ['C', 5], ['C', 6], ['C', 7], 
+    ['D', 2], ['D', 3], ['D', 4], ['D', 5], ['D', 6], ['D', 7], 
+    ['E', 2], ['E', 3], ['E', 4], ['E', 5], ['E', 6], ['E', 7], 
+    ['F', 2], ['F', 3], ['F', 4], ['F', 5], ['F', 6], ['F', 7], 
+    ['G', 2], ['G', 3], ['G', 4], ['G', 5], ['G', 6], ['G', 7]]
+  stain_name: 
+    olfm4: [['B', 2], ['B', 3], ['C', 2], ['C', 3], ['D', 2], ['D', 3], ['E', 2], ['E', 3], ['F', 2], ['F', 3], ['G', 2], ['G', 3]]
+    lyz: [['B', 4], ['B', 5], ['C', 4], ['C', 5], ['D', 4], ['D', 5], ['E', 4], ['E', 5], ['F', 4], ['F', 5], ['G', 4], ['G', 5]]
+    muc2: [['B', 6], ['B', 7], ['C', 6], ['C', 7], ['D', 6], ['D', 7], ['E', 6], ['E', 7], ['F', 6], ['F', 7], ['G', 6], ['G', 7]]
+
+ct_14d_t00:
+  <<: *gut5_info
+  name: ct_14d_t00
+
+ct_14d_t03:
+  <<: *gut5_info
+  name: ct_14d_t03
+
+ct_14d_t07:
+  <<: *gut5_info
+  name: ct_14d_t07
+
+ct_14d_t11:
+  <<: *gut5_info
+  name: ct_14d_t11
+
+ct_14d_t14:
+  <<: *gut5_info
+  name: ct_14d_t14
+
+gut6_data: &gut6_info
+  name: gut6_data
+  format: 96_well
+  num_fields: 16
+  field_start: 1
+  num_images: 768
+  channels:
+    dna: 'UV - DAPI'
+    cellstain: 'Green - dsRed'
+    paneth: ''
+    edu: 'Blue - FITC'
+  cpproj_template_names: 
+    preseg: dense_gut6
+    merged: merged_gut6
+  thresh:
+    edu: 0.003
+    paneth: 0.007
+    cellstain: 0.005
+  wells: [['A', 1], ['A', 2], ['A', 3], ['A', 4], ['A', 5], ['A', 6], ['A', 7], ['A', 8], ['A', 9], ['A', 10], ['A', 11], ['A', 12],
+    ['B', 1], ['B', 2], ['B', 3], ['B', 4], ['B', 5], ['B', 6], ['B', 7], ['B', 8], ['B', 9], ['B', 10], ['B', 11], ['B', 12],
+    ['C', 1], ['C', 2], ['C', 3], ['C', 4], ['C', 5], ['C', 6], ['C', 7], ['C', 8], ['C', 9], ['C', 10], ['C', 11], ['C', 12],
+    ['D', 1], ['D', 2], ['D', 3], ['D', 4], ['D', 5], ['D', 6], ['D', 7], ['D', 8], ['D', 9], ['D', 10], ['D', 11], ['D', 12]]
+
+ct_pc_control_t1:
+  <<: *gut6_info
+  name: ct_pc_control_t1
+
+ct_pc_wnt_t1:
+  <<: *gut6_info
+  name: ct_pc_wnt_t1
+
+gut7_data: &gut7_info
+  name: gut7_data
+  format: 96_well
+  num_fields: 16
+  field_start: 1
+  num_images: 1536
+  channels:
+    dna: 'UV - DAPI'
+    cellstain: 'Green - dsRed'
+    paneth: ''
+    edu: 'Blue - FITC'
+  cpproj_template_names: 
+    preseg: dense_gut7
+    merged: merged_gut7
+  thresh:
+    edu: 0.005
+    paneth: 0.007
+    cellstain: 0.004
+  wells: [['A', 1], ['A', 2], ['A', 3], ['A', 4], ['A', 5], ['A', 6], ['A', 7], ['A', 8], ['A', 9], ['A', 10], ['A', 11], ['A', 12],
+    ['B', 1], ['B', 2], ['B', 3], ['B', 4], ['B', 5], ['B', 6], ['B', 7], ['B', 8], ['B', 9], ['B', 10], ['B', 11], ['B', 12],
+    ['C', 1], ['C', 2], ['C', 3], ['C', 4], ['C', 5], ['C', 6], ['C', 7], ['C', 8], ['C', 9], ['C', 10], ['C', 11], ['C', 12],
+    ['D', 1], ['D', 2], ['D', 3], ['D', 4], ['D', 5], ['D', 6], ['D', 7], ['D', 8], ['D', 9], ['D', 10], ['D', 11], ['D', 12],
+    ['E', 1], ['E', 2], ['E', 3], ['E', 4], ['E', 5], ['E', 6], ['E', 7], ['E', 8], ['E', 9], ['E', 10], ['E', 11], ['E', 12],
+    ['F', 1], ['F', 2], ['F', 3], ['F', 4], ['F', 5], ['F', 6], ['F', 7], ['F', 8], ['F', 9], ['F', 10], ['F', 11], ['F', 12],
+    ['G', 1], ['G', 2], ['G', 3], ['G', 4], ['G', 5], ['G', 6], ['G', 7], ['G', 8], ['G', 9], ['G', 10], ['G', 11], ['G', 12],
+    ['H', 1], ['H', 2], ['H', 3], ['H', 4], ['H', 5], ['H', 6], ['H', 7], ['H', 8], ['H', 9], ['H', 10], ['H', 11], ['H', 12]]
+
+ct_pc_t3:
+  <<: *gut7_info
+  name: ct_pc_t3
+
+gut8_data: &gut8_info
+  name: gut8_data
+  format: 96_well
+  num_fields: 16
+  field_start: 1
+  num_images: 1536
+  channels:
+    dna: 'UV - DAPI'
+    cellstain: 'Blue - FITC' #olfm4
+    paneth: ''
+    edu: 'Green - dsRed'
+  cpproj_template_names: 
+    preseg: dense_gut8
+    merged: merged_gut8
+  thresh:
+    edu: 0.003
+    paneth: 0.007
+    cellstain: 0.003 
+  wells: [['A', 1], ['A', 2], ['A', 3], ['A', 4], ['A', 5], ['A', 6], ['A', 7], ['A', 8], ['A', 9], ['A', 10], ['A', 11], ['A', 12],
+    ['B', 1], ['B', 2], ['B', 3], ['B', 4], ['B', 5], ['B', 6], ['B', 7], ['B', 8], ['B', 9], ['B', 10], ['B', 11], ['B', 12],
+    ['C', 1], ['C', 2], ['C', 3], ['C', 4], ['C', 5], ['C', 6], ['C', 7], ['C', 8], ['C', 9], ['C', 10], ['C', 11], ['C', 12],
+    ['D', 1], ['D', 2], ['D', 3], ['D', 4], ['D', 5], ['D', 6], ['D', 7], ['D', 8], ['D', 9], ['D', 10], ['D', 11], ['D', 12],
+    ['E', 1], ['E', 2], ['E', 3], ['E', 4], ['E', 5], ['E', 6], ['E', 7], ['E', 8], ['E', 9], ['E', 10], ['E', 11], ['E', 12],
+    ['F', 1], ['F', 2], ['F', 3], ['F', 4], ['F', 5], ['F', 6], ['F', 7], ['F', 8], ['F', 9], ['F', 10], ['F', 11], ['F', 12],
+    ['G', 1], ['G', 2], ['G', 3], ['G', 4], ['G', 5], ['G', 6], ['G', 7], ['G', 8], ['G', 9], ['G', 10], ['G', 11], ['G', 12],
+    ['H', 1], ['H', 2], ['H', 3], ['H', 4], ['H', 5], ['H', 6], ['H', 7], ['H', 8], ['H', 9], ['H', 10], ['H', 11], ['H', 12]]
+  stain_name: 
+    cellstain: [['A', 1], ['A', 2], ['A', 3], ['A', 4], ['A', 5], ['A', 6], ['A', 7], ['A', 8], ['A', 9], ['A', 10], ['A', 11], ['A', 12],
+    ['B', 1], ['B', 2], ['B', 3], ['B', 4], ['B', 5], ['B', 6], ['B', 7], ['B', 8], ['B', 9], ['B', 10], ['B', 11], ['B', 12],
+    ['C', 1], ['C', 2], ['C', 3], ['C', 4], ['C', 5], ['C', 6], ['C', 7], ['C', 8], ['C', 9], ['C', 10], ['C', 11], ['C', 12],
+    ['D', 1], ['D', 2], ['D', 3], ['D', 4], ['D', 5], ['D', 6], ['D', 7], ['D', 8], ['D', 9], ['D', 10], ['D', 11], ['D', 12],
+    ['E', 1], ['E', 2], ['E', 3], ['E', 4], ['E', 5], ['E', 6], ['E', 7], ['E', 8], ['E', 9], ['E', 10], ['E', 11], ['E', 12],
+    ['F', 1], ['F', 2], ['F', 3], ['F', 4], ['F', 5], ['F', 6], ['F', 7], ['F', 8], ['F', 9], ['F', 10], ['F', 11], ['F', 12],
+    ['G', 1], ['G', 2], ['G', 3], ['G', 4], ['G', 5], ['G', 6], ['G', 7], ['G', 8], ['G', 9], ['G', 10], ['G', 11], ['G', 12],
+    ['H', 1], ['H', 2], ['H', 3], ['H', 4], ['H', 5], ['H', 6], ['H', 7], ['H', 8], ['H', 9], ['H', 10], ['H', 11], ['H', 12]]
+
+ct_rspo_drc1:
+  <<: *gut8_info
+  name: ct_rspo_drc1
+
+ct_rspo_drc2:
+  <<: *gut8_info
+  name: ct_rspo_drc2
+
